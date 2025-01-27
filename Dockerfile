@@ -1,19 +1,21 @@
-FROM node:18
+# Dockerfile
 
-# Set the working directory inside the container
+# Base image
+FROM node:18 AS base
 WORKDIR /app
-
-# Copy package.json and package-lock.json first to install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application files
 COPY . .
 
-# Expose the port that your app runs on
+# Development stage
+FROM base AS dev
+ENV NODE_ENV=development
 EXPOSE 3000
-
-# Start the app
 CMD ["npm", "run", "dev"]
+
+## Production stage (optional)
+#FROM base AS prod
+#ENV NODE_ENV=production
+#RUN npm run build
+#EXPOSE 3000
+#CMD ["npm", "start"]
